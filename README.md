@@ -1,6 +1,6 @@
-##Burdette
+#Burdette
 A Rate-Limiting Library for PHP 5.4+
-====================================
+------------------------------------
 [![Build Status](https://travis-ci.org/squinones/burdette.svg?branch=master)](https://travis-ci.org/squinones/burdette) [![Code Climate](https://codeclimate.com/github/squinones/burdette/badges/gpa.svg)](https://codeclimate.com/github/squinones/burdette) [![Test Coverage](https://codeclimate.com/github/squinones/burdette/badges/coverage.svg)](https://codeclimate.com/github/squinones/burdette)
 
 ###What does this do?
