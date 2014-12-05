@@ -41,7 +41,7 @@ class BucketRepositoryTest extends \PHPUnit_Framework_TestCase
     {
         $bucket   = \Mockery::mock('Burdette\\BucketInterface');
 
-        $this->storage->shouldReceive('remove')->once()->with($bucket)->andReturn(true);
+        $this->storage->shouldReceive('delete')->once()->with($bucket)->andReturn(true);
         $repo = new BucketRepository($this->storage);
         $repo->remove($bucket);
     }

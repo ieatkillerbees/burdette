@@ -19,12 +19,18 @@ class VelocityLimitingBucketStrategyTest extends \PHPUnit_Framework_TestCase
 {
     public function testStrategy()
     {
-        $storage  = new FileStorageAdapter(__DIR__ . '/_storage');
+        $path = __DIR__ . '/_storage/';
+        if (!is_dir($path)) {
+            mkdir($path);
+        }
+        $storage  = new FileStorageAdapter($path);
         $repo     = new BucketRepository($storage);
         $strategy = new VelocityLimitingBucketStrategy($repo);
         $strategy->setVelocity(5, 10);
         $identity = new StringIdentity("foo");
-        unlink(__DIR__ . '/_storage/' . (string) $identity);
+        if (file_exists($path . (string) $identity)) {
+            unlink($path . (string) $identity);
+        }
         $count = 0;
         while ($count < 5) {
             $token = $strategy->getToken($identity);
@@ -38,5 +44,7 @@ class VelocityLimitingBucketStrategyTest extends \PHPUnit_Framework_TestCase
         $token = $strategy->getToken($identity);
         $this->assertEquals(true, $token->isAllowed());
         $this->assertEquals(1, $token->getAvailableTokens());
+        unlink($path . (string) $identity);
+        rmdir($path);
     }
 }
