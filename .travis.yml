@@ -8,3 +8,7 @@ php:
 
 before_script:
   - composer install --prefer-source
+
+addons:
+    code_climate:
+        repo_token: 18a241b9d36a9c072f6af96d6550e82ab4d1aa17aaf39894da4113421660efb6
