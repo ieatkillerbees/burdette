@@ -9,6 +9,9 @@ php:
 before_script:
   - composer install --prefer-source
 
+after_script:
+  - vendor/bin/test-reporter
+
 addons:
     code_climate:
-        repo_token: 18a241b9d36a9c072f6af96d6550e82ab4d1aa17aaf39894da4113421660efb6
+        repo_token: d1542ed817effed197f006ae326b6f14cdd7b6d49e45962239e75e58980b9af2
