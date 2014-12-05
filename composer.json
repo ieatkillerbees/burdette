@@ -1,0 +1,16 @@
+{
+    "name": "burdette/burdette",
+    "description": "A rate-limiting library for PHP 5.5+",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "Burdette\\": "lib/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.6@dev",
+        "mockery/mockery": "~0.9@dev"
+    }
+}
