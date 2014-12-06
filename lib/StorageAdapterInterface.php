@@ -12,6 +12,8 @@ namespace Burdette;
 /**
  * Interface StorageAdapterInterface
  *
+ * Storage adapters are objects which manage the persistence of Bucket objects to and from a persistence layer
+ *
  * @author Samantha Quiñones <samantha@tembies.com>
  * @package Burdette
  */

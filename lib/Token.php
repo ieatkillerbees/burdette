@@ -10,7 +10,9 @@
 namespace Burdette;
 
 /**
- * Class Token
+ * Basic Token implementation
+ *
+ * @{inheritdoc}
  *
  * @author Samantha Quiñones <samantha@tembies.com>
  * @package Burdette
@@ -21,7 +23,7 @@ class Token implements TokenInterface
     private $identity;
 
     /** @var integer */
-    private $availableTokens;
+    private $available;
 
     /** @var integer */
     private $nextReplenish;
@@ -31,24 +33,24 @@ class Token implements TokenInterface
 
     /**
      * @param IdentityInterface $identity
-     * @param $allowed
-     * @param $availableTokens
-     * @param $nextReplenish
+     * @param bool              $allowed
+     * @param integer           $available
+     * @param \DateTime|null    $nextReplenish
      */
-    public function __construct(IdentityInterface $identity, $allowed, $availableTokens, $nextReplenish)
+    public function __construct(IdentityInterface $identity, $allowed, $available, \DateTime $nextReplenish = null)
     {
         $this->identity = $identity;
         $this->allowed = $allowed;
-        $this->availableTokens = $availableTokens;
+        $this->available = $available;
         $this->nextReplenish = $nextReplenish;
     }
 
     /**
      * @return int
      */
-    public function getAvailableTokens()
+    public function getAvailable()
     {
-        return $this->availableTokens;
+        return $this->available;
     }
 
     /**

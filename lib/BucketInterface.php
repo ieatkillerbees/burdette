@@ -13,6 +13,8 @@ namespace Burdette;
 /**
  * Interface TokenBucketInterface
  *
+ * Buckets are the containers of state for a given Identity.
+ *
  * @author Samantha Quiñones <samantha@tembies.com>
  * @package Burdette
  */
@@ -24,23 +26,21 @@ interface BucketInterface
     public function getIdentity();
 
     /**
-     * Get the number of available tokens
-     *
+     * @param IdentityInterface $identity
+     * @return BucketInterface
+     */
+    public function setIdentity(IdentityInterface $identity);
+
+    /**
      * @return integer
      */
-    public function getAvailableTokens();
+    public function getTokens();
 
     /**
-     * Obtain a token
-     *
-     * @return TokenInterface
+     * @param  integer $tokens
+     * @return BucketInterface
      */
-    public function getToken();
+    public function setTokens($tokens);
 
-    /**
-     * Replenish the bucket
-     *
-     * @return null
-     */
-    public function replenish();
+    public function newToken($nextReplenishment = null);
 }

@@ -18,10 +18,10 @@ class TokenTest extends \PHPUnit_Framework_TestCase
     {
         $identity = $this->getMockBuilder('Burdette\\IdentityInterface')->getMock();
         $time = time();
-        $token = new Token($identity, true, 1, $time+10);
+        $token = new Token($identity, true, 1, \DateTime::createFromFormat("U", $time+10));
         $this->assertEquals($identity, $token->getIdentity());
         $this->assertEquals(true, $token->isAllowed());
-        $this->assertEquals(1, $token->getAvailableTokens());
-        $this->assertEquals($time+10, $token->getNextReplenish());
+        $this->assertEquals(1, $token->getAvailable());
+        $this->assertEquals(\DateTime::createFromFormat("U", $time+10), $token->getNextReplenish());
     }
 }

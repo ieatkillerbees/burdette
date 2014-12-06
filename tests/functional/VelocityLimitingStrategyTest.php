@@ -10,12 +10,14 @@
 namespace Burdette\Tests\Functional;
 
 
+use Burdette\BucketFactory;
 use Burdette\BucketRepository;
 use Burdette\Identities\StringIdentity;
 use Burdette\StorageAdapters\FileStorageAdapter;
-use Burdette\Strategies\VelocityLimitingBucketStrategy;
+use Burdette\Strategies\VelocityLimitingStrategy;
+use Burdette\TokenFactory;
 
-class VelocityLimitingBucketStrategyTest extends \PHPUnit_Framework_TestCase
+class VelocityLimitingStrategyTest extends \PHPUnit_Framework_TestCase
 {
     public function testStrategy()
     {
@@ -24,9 +26,10 @@ class VelocityLimitingBucketStrategyTest extends \PHPUnit_Framework_TestCase
             mkdir($path);
         }
         $storage  = new FileStorageAdapter($path);
-        $repo     = new BucketRepository($storage);
-        $strategy = new VelocityLimitingBucketStrategy($repo);
-        $strategy->setVelocity(5, 10);
+        $bucketFactory = new BucketFactory(new TokenFactory());
+        $repo     = new BucketRepository($storage, $bucketFactory);
+        $strategy = new VelocityLimitingStrategy($repo);
+        $strategy->setVelocity(5, 1, true);
         $identity = new StringIdentity("foo");
         if (file_exists($path . (string) $identity)) {
             unlink($path . (string) $identity);
@@ -42,8 +45,10 @@ class VelocityLimitingBucketStrategyTest extends \PHPUnit_Framework_TestCase
 
         sleep(2);
         $token = $strategy->getToken($identity);
+
         $this->assertEquals(true, $token->isAllowed());
-        $this->assertEquals(1, $token->getAvailableTokens());
+        $this->assertEquals(1, $token->getAvailable());
+
         unlink($path . (string) $identity);
         rmdir($path);
     }

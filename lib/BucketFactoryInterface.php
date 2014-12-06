@@ -7,22 +7,23 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Burdette;
 
 /**
- * Interface IdentityInterface
+ * Interface BucketFactoryInterface
  *
- * Identity classes are used as complex keys to uniquely identify a token bucket.
+ * Bucket Factories create instances of BucketInterface
  *
- * @author Samantha Quiñones <samantha@tembies.com>
+ * @author  Samantha Quiñones <samantha@tembies.com>
  * @package Burdette
  */
-interface IdentityInterface
+interface BucketFactoryInterface
 {
     /**
-     * Returns a string representation of the identity
-     *
-     * @return string
+     * @param IdentityInterface $identity
+     * @return BucketInterface
      */
-    public function __toString();
+    public function newInstance(IdentityInterface $identity);
 }
+ 
