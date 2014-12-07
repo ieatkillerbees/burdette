@@ -8,6 +8,38 @@ This library is primarily designed for APIs that wish to limit how many requests
 of time. In theory it can be used to throttle any kind of behavior. If you find a neat use case, we'd love to hear 
 about it!
 
+### Usage
+At a basic level, you have a strategy, which is just a class that implements a specific rate-limiting policy. Strategies operate on buckets which maintain the state for any given identity. The bucket contains tokens which are replenished periodically. When a bucket has no more tokens to give, the identity has run up against the rate limit and should be stopped.
+
+Let's use a practical example. Say you have an API endpoint /foo and you want to limit it so that any given IP address may only access /foo 1 time per hour.
+
+In this case, the IP address is the identity. We'll employ a `TimeBlockStrategy` to implement the policy we want. Ignore the reference to a bucket repository for the moment. It will be explained later.
+```php
+use Burdette\Identities\StringIdentity;
+use Burdette\Strategies\TimeBlockStrategy;
+
+$identity = new StringIdentity($client_ip);
+$strategy = new TimeBlockStrategy($bucket_repository);
+$strategy->setReplenishmentRate(100, TimeBlockStrategy::HOURLY);
+
+$token = $strategy->newToken($identity);
+echo $token->isAllowed() . "\n";
+echo $strategy->getNextReplenishmentTime();
+
+$new_token = $strategy->newToken($identity);
+echo $token->isAllowed() . "\n";
+echo $strategy->getNextReplenishmentTime();
+```
+
+Running this code we should see something like...
+```
+true
+Sat, 06 Dec 2014 22:00:00 -0500
+
+false
+Sat, 06 Dec 2014 22:00:00 -0500
+```
+
 ###Check back soon
 This is a new project! Check back soon for more information!
 
