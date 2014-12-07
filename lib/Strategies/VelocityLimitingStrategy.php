@@ -24,7 +24,7 @@ use Burdette\TokenInterface;
  * @package Burdette\Strategies
  * @author  Samantha Quiñones <samantha@tembies.com>
  */
-class VelocityLimitingStrategy implements StrategyInterface
+class VelocityLimitingStrategy extends AbstractBucketBasedStrategy implements StrategyInterface
 {
     /** @var BucketRepositoryInterface */
     private $bucketRepository;
@@ -72,6 +72,9 @@ class VelocityLimitingStrategy implements StrategyInterface
             throw new \LogicException("Absolute rate cannot be greater than total max tokens");
         }
 
+        $period = abs($period);
+        $tokens = abs($tokens);
+
         $this->maxTokens = $tokens;
         if ($absolute) {
             $this->replenishRate = $period;
@@ -91,19 +94,17 @@ class VelocityLimitingStrategy implements StrategyInterface
     }
 
     /**
-     * @param IdentityInterface $identity
+     * Obtain a new access token for the given IdentityInterface
+     *
+     * @param  IdentityInterface $identity
      * @return TokenInterface
      */
     public function getToken(IdentityInterface $identity)
     {
-        $bucket = $this->bucketRepository->find($identity);
-        if (!$bucket) {
-            $bucket = $this->bucketRepository->create($identity);
-            $bucket->setTokens($this->maxTokens);
-        }
+        $bucket = $this->getBucket($identity, $this->bucketRepository, $this->maxTokens);
         $this->replenishTokens($bucket);
         $token = $bucket->newToken();
-        $this->bucketRepository->persist($bucket);
+        $this->saveBucket($this->bucketRepository, $bucket);
         return $token;
     }
 
