@@ -9,9 +9,12 @@
             "Burdette\\": "lib/"
         }
     },
+    "require": {
+        "php": "^5.4 || ^7.0"
+    },
     "require-dev": {
-        "phpunit/phpunit": "~4.6@dev",
-        "mockery/mockery": "~0.9@dev",
+        "phpunit/phpunit": "^5.2",
+        "mockery/mockery": "~0.9",
         "codeclimate/php-test-reporter": "dev-master",
         "hamcrest/hamcrest-php": "dev-master"
     }
