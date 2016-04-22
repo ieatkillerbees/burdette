@@ -27,32 +27,19 @@ use Burdette\TokenInterface;
  */
 class TimeBlockStrategy extends AbstractBucketBasedStrategy implements StrategyInterface
 {
-    const HOURLY = 3600;
+    const HOURLY      = 3600;
     const SEMI_HOURLY = 1800;
-    const DAILY = 86400;
-    const SEMI_DAILY = 43200;
-    const PER_MINUTE = 60;
+    const DAILY       = 86400;
+    const SEMI_DAILY  = 43200;
+    const PER_MINUTE  = 60;
 
     /** @var BucketRepositoryInterface */
     private $bucketRepository;
 
     /** @var integer */
     private $lastReplenishment;
-
-    /**
-     * @return int
-     */
-    public function getLastReplenishment()
-    {
-        if (!isset($this->lastReplenishment)) {
-            $this->lastReplenishment = time();
-        }
-        return $this->lastReplenishment;
-    }
-
     /** @var integer */
     private $period = self::HOURLY;
-
     /** @var integer */
     private $maxTokens = 1;
 
@@ -78,7 +65,7 @@ class TimeBlockStrategy extends AbstractBucketBasedStrategy implements StrategyI
         $tokens = abs($tokens);
 
         $this->maxTokens = $tokens;
-        $this->period = $period;
+        $this->period    = $period;
     }
 
     public function getReplenishmentSize()
@@ -90,25 +77,12 @@ class TimeBlockStrategy extends AbstractBucketBasedStrategy implements StrategyI
     {
         return $this->period;
     }
-
-    public function getNextReplenishmentTime($dateTime = true)
-    {
-        $lastReplenishment = $this->getLastReplenishment();
-        $nextReplenishment = $this->getNextReplenishment($lastReplenishment, $this->period);
-
-        if (!$dateTime) {
-            return $nextReplenishment;
-        }
-
-        $dateTime = new \DateTime();
-        $dateTime->setTimestamp($nextReplenishment);
-        return $dateTime;
-    }
-
+    
     /**
      * Obtain a new access token for the given IdentityInterface
      *
      * @param  IdentityInterface $identity
+     *
      * @return TokenInterface
      */
     public function getToken(IdentityInterface $identity)
@@ -116,30 +90,11 @@ class TimeBlockStrategy extends AbstractBucketBasedStrategy implements StrategyI
         $bucket = $this->getBucket($identity, $this->bucketRepository, $this->maxTokens);
         $this->replenishTokens($bucket);
         $token = $bucket->newToken(
-            \DateTime::createFromFormat("U", $this->getNextReplenishment($this->lastReplenishment, $this->period))
+            \DateTime::createFromFormat("U", $bucket->getLastReplenishment() + $this->period)
         );
         $this->saveBucket($this->bucketRepository, $bucket);
+
         return $token;
-    }
-
-    /**
-     * @param $time
-     * @param $period
-     * @return mixed
-     */
-    private function getPreviousReplenishment($time, $period)
-    {
-        return $time - ($time % $period);
-    }
-
-    /**
-     * @param $time
-     * @param $period
-     * @return mixed
-     */
-    private function getNextReplenishment($time, $period)
-    {
-        return $this->getPreviousReplenishment($time, $period) + $period;
     }
 
     /**
@@ -149,14 +104,17 @@ class TimeBlockStrategy extends AbstractBucketBasedStrategy implements StrategyI
      */
     public function replenishTokens(BucketInterface $bucket)
     {
-        $lastReplenishment = $this->getLastReplenishment();
+        $time              = time();
+        $lastReplenishment = $bucket->getLastReplenishment() ?: 0;
+        $nextReplenishment =
+            ($lastReplenishment === 0) ? 0 : $lastReplenishment + $this->period;
 
-        $nextReplenishment = $this->getNextReplenishment($lastReplenishment, $this->period);
-        if (time() < $nextReplenishment) {
+        if ($nextReplenishment > $time) {
             return;
         }
 
         $bucket->setTokens($this->maxTokens);
-        $this->lastReplenishment = time();
+        $bucket->setLastReplenishment($time);
+        $this->saveBucket($this->bucketRepository, $bucket);
     }
 }

@@ -28,6 +28,8 @@ class Bucket implements BucketInterface
 
     /** @var TokenFactoryInterface */
     private $tokenFactory;
+    
+    private $lastReplenish;
 
     /**
      * @return IdentityInterface
@@ -80,6 +82,10 @@ class Bucket implements BucketInterface
         $this->tokenFactory = $tokenFactory;
     }
 
+    /**
+     * @param null $nextReplenishment
+     * @return TokenInterface
+     */
     public function newToken($nextReplenishment = null)
     {
         $allowed = ($this->getTokens() > 0);
@@ -88,5 +94,21 @@ class Bucket implements BucketInterface
         }
         $token = $this->tokenFactory->newInstance($this->identity, $allowed, $this->getTokens(), $nextReplenishment);
         return $token;
+    }
+
+    /**
+     * @param int $time
+     */
+    public function setLastReplenishment($time)
+    {
+        $this->lastReplenish = $time;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastReplenishment()
+    {
+        return $this->lastReplenish;
     }
 }

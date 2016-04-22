@@ -37,10 +37,8 @@ class TimeBlockStrategyTest extends BaseStrategyTestCase
         $this->assertEquals($tokens, $strategy->getReplenishmentSize());
         $this->assertEquals($period, $strategy->getReplenishmentPeriod());
         $nextReplenishment = $expected;
-        $this->assertEquals($nextReplenishment, $strategy->getNextReplenishmentTime(false));
         $nextReplenishment = new \DateTime();
         $nextReplenishment->setTimestamp($expected);
-        $this->assertEquals($nextReplenishment, $strategy->getNextReplenishmentTime());
     }
 
     public function rateProvider()
@@ -58,6 +56,7 @@ class TimeBlockStrategyTest extends BaseStrategyTestCase
      */
     public function testReplenishment($tokens, $replenish, \DateTime $lastReplenishment)
     {
+        $this->repo->shouldReceive('persist')->withAnyArgs();
         $strategy = new TimeBlockStrategy($this->repo);
         $strategy->setReplenishmentRate($replenish, 1);
         $rClass = new \ReflectionClass($strategy);
@@ -67,6 +66,8 @@ class TimeBlockStrategyTest extends BaseStrategyTestCase
         $bucket   = \Mockery::mock('Burdette\\BucketInterface');
         $bucket->shouldReceive('getTokens')->once()->withNoArgs()->andReturn($tokens);
         $bucket->shouldReceive('setTokens')->once()->with($replenish)->andReturnNull();
+        $bucket->shouldReceive('getLastReplenishment')->withNoArgs()->andReturn($lastReplenishment->getTimestamp());
+        $bucket->shouldReceive('setLastReplenishment')->with(\Mockery::type('int'))->andReturnNull();
         $strategy->replenishTokens($bucket);
     }
 
