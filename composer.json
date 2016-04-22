@@ -3,7 +3,7 @@
     "description": "A rate-limiting library for PHP 5.5+",
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "license": "proprietary",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Burdette\\": "lib/"
