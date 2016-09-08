@@ -25,7 +25,7 @@ class Token implements TokenInterface
     /** @var integer */
     private $available;
 
-    /** @var integer */
+    /** @var \DateTime */
     private $nextReplenish;
 
     /** @var bool */
