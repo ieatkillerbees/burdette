@@ -62,7 +62,7 @@ class Token implements TokenInterface
     }
 
     /**
-     * @return int
+     * @return \DateTime
      */
     public function getNextReplenish()
     {
