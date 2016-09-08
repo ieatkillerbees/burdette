@@ -34,7 +34,7 @@ interface TokenInterface
     public function getIdentity();
 
     /**
-     * @return int
+     * @return \DateTime
      */
     public function getNextReplenish();
 
