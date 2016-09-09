@@ -37,9 +37,8 @@ class TimeBlockStrategy extends AbstractBucketBasedStrategy implements StrategyI
     private $bucketRepository;
 
     /** @var integer */
-    private $lastReplenishment;
-    /** @var integer */
     private $period = self::HOURLY;
+
     /** @var integer */
     private $maxTokens = 1;
 
@@ -77,7 +76,7 @@ class TimeBlockStrategy extends AbstractBucketBasedStrategy implements StrategyI
     {
         return $this->period;
     }
-    
+
     /**
      * Obtain a new access token for the given IdentityInterface
      *
@@ -88,10 +87,8 @@ class TimeBlockStrategy extends AbstractBucketBasedStrategy implements StrategyI
     public function getToken(IdentityInterface $identity)
     {
         $bucket = $this->getBucket($identity, $this->bucketRepository, $this->maxTokens);
-        $this->replenishTokens($bucket);
-        $token = $bucket->newToken(
-            \DateTime::createFromFormat("U", $bucket->getLastReplenishment() + $this->period)
-        );
+        $nextReplenishment = $this->replenishTokens($bucket);
+        $token = $bucket->newToken($nextReplenishment);
         $this->saveBucket($this->bucketRepository, $bucket);
 
         return $token;
@@ -101,20 +98,27 @@ class TimeBlockStrategy extends AbstractBucketBasedStrategy implements StrategyI
      * Replenish the tokens for the given BucketInterface
      *
      * @param BucketInterface $bucket
+     *
+     * @return \DateTime
      */
     public function replenishTokens(BucketInterface $bucket)
     {
-        $time              = time();
-        $lastReplenishment = $bucket->getLastReplenishment() ?: 0;
-        $nextReplenishment =
-            ($lastReplenishment === 0) ? 0 : $lastReplenishment + $this->period;
-
-        if ($nextReplenishment > $time) {
-            return;
+        $lastReplenishment = $bucket->getLastReplenishment();
+        if (!$lastReplenishment instanceof \DateTime) {
+            $lastReplenishment = new \DateTime('now');
+            $bucket->setLastReplenishment($lastReplenishment);
         }
 
-        $bucket->setTokens($this->maxTokens);
-        $bucket->setLastReplenishment($time);
-        $this->saveBucket($this->bucketRepository, $bucket);
+        $nextReplenishment = clone $lastReplenishment;
+        $nextReplenishment->add(new \DateInterval("PT" . $this->period . "S"));
+
+        $now = new \DateTime('now');
+        if ($now >= $nextReplenishment) {
+            $bucket->setTokens($this->maxTokens);
+            $bucket->setLastReplenishment($now);
+            $this->saveBucket($this->bucketRepository, $bucket);
+        }
+
+        return $nextReplenishment;
     }
 }

@@ -22,6 +22,6 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($identity, $token->getIdentity());
         $this->assertEquals(true, $token->isAllowed());
         $this->assertEquals(1, $token->getAvailable());
-        $this->assertEquals(\DateTime::createFromFormat("U", $time+10), $token->getNextReplenish());
+        $this->assertEquals(\DateTime::createFromFormat("U", $time+10), $token->getNextReplenishment());
     }
 }

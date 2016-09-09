@@ -36,7 +36,7 @@ interface TokenInterface
     /**
      * @return \DateTime
      */
-    public function getNextReplenish();
+    public function getNextReplenishment();
 
     /**
      * @return bool

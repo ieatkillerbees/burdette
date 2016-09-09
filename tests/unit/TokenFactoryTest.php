@@ -23,7 +23,7 @@ class TokenFactoryTest extends \PHPUnit_Framework_TestCase
         $token   = $factory->newInstance($identity, true, 42, $date);
         $this->assertInstanceOf('Burdette\\Token', $token);
         $this->assertEquals($identity, $token->getIdentity());
-        $this->assertEquals($date, $token->getNextReplenish());
+        $this->assertEquals($date, $token->getNextReplenishment());
         $this->assertEquals(42, $token->getAvailable());
         $this->assertTrue($token->isAllowed());
     }
