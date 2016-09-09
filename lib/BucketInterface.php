@@ -43,7 +43,7 @@ interface BucketInterface
     public function setTokens($tokens);
 
     /**
-     * @param \DateTime $nextReplenishment
+     * @param \DateTime|null $nextReplenishment
      * @return mixed
      */
     public function newToken(\DateTime $nextReplenishment = null);

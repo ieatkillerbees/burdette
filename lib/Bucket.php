@@ -86,7 +86,7 @@ class Bucket implements BucketInterface
     }
 
     /**
-     * @param \DateTime $nextReplenishment
+     * @param \DateTime|null $nextReplenishment
      * @return TokenInterface
      */
     public function newToken(\DateTime $nextReplenishment = null)

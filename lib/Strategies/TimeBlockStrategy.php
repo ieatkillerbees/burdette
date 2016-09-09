@@ -109,7 +109,8 @@ class TimeBlockStrategy extends AbstractBucketBasedStrategy implements StrategyI
             $bucket->setLastReplenishment($lastReplenishment);
         }
 
-        $nextReplenishment = (clone $lastReplenishment)->add(new \DateInterval("PT" . $this->period . "S"));
+        $nextReplenishment = clone $lastReplenishment;
+        $nextReplenishment->add(new \DateInterval("PT" . $this->period . "S"));
 
         $now = new \DateTime('now');
         if ($now >= $nextReplenishment) {
