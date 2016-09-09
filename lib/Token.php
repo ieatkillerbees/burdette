@@ -26,7 +26,7 @@ class Token implements TokenInterface
     private $available;
 
     /** @var \DateTime */
-    private $nextReplenish;
+    private $nextReplenishment;
 
     /** @var bool */
     private $allowed;
@@ -35,14 +35,14 @@ class Token implements TokenInterface
      * @param IdentityInterface $identity
      * @param bool              $allowed
      * @param integer           $available
-     * @param \DateTime         $nextReplenish
+     * @param \DateTime|null    $nextReplenishment
      */
-    public function __construct(IdentityInterface $identity, $allowed, $available, \DateTime $nextReplenish = null)
+    public function __construct(IdentityInterface $identity, $allowed, $available, \DateTime $nextReplenishment = null)
     {
         $this->identity = $identity;
         $this->allowed = $allowed;
         $this->available = $available;
-        $this->nextReplenish = $nextReplenish;
+        $this->nextReplenishment = $nextReplenishment;
     }
 
     /**
@@ -64,9 +64,9 @@ class Token implements TokenInterface
     /**
      * @return \DateTime
      */
-    public function getNextReplenish()
+    public function getNextReplenishment()
     {
-        return $this->nextReplenish;
+        return $this->nextReplenishment;
     }
 
     /**

@@ -8,14 +8,12 @@
  * file that was distributed with this source code.
  */
 namespace Burdette\Tests\Functional;
-require __DIR__ . '/../../vendor/autoload.php';
 
 use Burdette\BucketFactory;
 use Burdette\BucketRepository;
 use Burdette\Identities\StringIdentity;
 use Burdette\StorageAdapters\FileStorageAdapter;
 use Burdette\Strategies\TimeBlockStrategy;
-use Burdette\Strategies\VelocityLimitingStrategy;
 use Burdette\TokenFactory;
 
 class TimeBlockStrategyTest extends \PHPUnit_Framework_TestCase
@@ -26,14 +24,14 @@ class TimeBlockStrategyTest extends \PHPUnit_Framework_TestCase
         if (!is_dir($path)) {
             mkdir($path);
         }
-        $storage  = new FileStorageAdapter($path);
+        $storage       = new FileStorageAdapter($path);
         $bucketFactory = new BucketFactory(new TokenFactory());
-        $repo     = new BucketRepository($storage, $bucketFactory);
-        $strategy = new TimeBlockStrategy($repo);
+        $repo          = new BucketRepository($storage, $bucketFactory);
+        $strategy      = new TimeBlockStrategy($repo);
         $strategy->setReplenishmentRate(5, 2);
         $identity = new StringIdentity("foo");
-        if (file_exists($path . (string) $identity)) {
-            unlink($path . (string) $identity);
+        if (file_exists($path . (string)$identity)) {
+            unlink($path . (string)$identity);
         }
         $count = 0;
         while ($count < 5) {
@@ -50,7 +48,7 @@ class TimeBlockStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $token->isAllowed());
         $this->assertEquals(4, $token->getAvailable());
 
-        unlink($path . (string) $identity);
+        unlink($path . (string)$identity);
         rmdir($path);
     }
 }

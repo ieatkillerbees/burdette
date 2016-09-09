@@ -86,10 +86,10 @@ class Bucket implements BucketInterface
     }
 
     /**
-     * @param null $nextReplenishment
+     * @param \DateTime $nextReplenishment
      * @return TokenInterface
      */
-    public function newToken($nextReplenishment = null)
+    public function newToken(\DateTime $nextReplenishment = null)
     {
         $allowed = ($this->getTokens() > 0);
         if ($allowed) {
@@ -102,7 +102,7 @@ class Bucket implements BucketInterface
     /**
      * @param \DateTime $dateTime
      */
-    public function setLastReplenishment($dateTime)
+    public function setLastReplenishment(\DateTime $dateTime)
     {
         $this->lastReplenish = $dateTime;
     }

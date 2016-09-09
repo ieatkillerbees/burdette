@@ -46,14 +46,14 @@ interface BucketInterface
      * @param \DateTime $nextReplenishment
      * @return mixed
      */
-    public function newToken($nextReplenishment = null);
+    public function newToken(\DateTime $nextReplenishment = null);
 
     /**
      * @param \DateTime $dateTime
      *
      * @return void
      */
-    public function setLastReplenishment($dateTime);
+    public function setLastReplenishment(\DateTime $dateTime);
 
     /**
      * @return \DateTime
