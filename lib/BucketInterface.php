@@ -43,19 +43,20 @@ interface BucketInterface
     public function setTokens($tokens);
 
     /**
-     * @param null $nextReplenishment
+     * @param \DateTime $nextReplenishment
      * @return mixed
      */
     public function newToken($nextReplenishment = null);
 
     /**
-     * @param int $time
+     * @param \DateTime $dateTime
+     *
      * @return void
      */
-    public function setLastReplenishment($time);
+    public function setLastReplenishment($dateTime);
 
     /**
-     * @return int
+     * @return \DateTime
      */
     public function getLastReplenishment();
 }

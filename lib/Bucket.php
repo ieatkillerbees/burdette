@@ -57,6 +57,9 @@ class Bucket implements BucketInterface
         return (int) floor($this->tokens);
     }
 
+    /**
+     * @return float
+     */
     public function getRealTokens()
     {
         return $this->tokens;
@@ -97,15 +100,15 @@ class Bucket implements BucketInterface
     }
 
     /**
-     * @param int $time
+     * @param \DateTime $dateTime
      */
-    public function setLastReplenishment($time)
+    public function setLastReplenishment($dateTime)
     {
-        $this->lastReplenish = $time;
+        $this->lastReplenish = $dateTime;
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getLastReplenishment()
     {

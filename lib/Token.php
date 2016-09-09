@@ -35,7 +35,7 @@ class Token implements TokenInterface
      * @param IdentityInterface $identity
      * @param bool              $allowed
      * @param integer           $available
-     * @param \DateTime|null    $nextReplenish
+     * @param \DateTime         $nextReplenish
      */
     public function __construct(IdentityInterface $identity, $allowed, $available, \DateTime $nextReplenish = null)
     {

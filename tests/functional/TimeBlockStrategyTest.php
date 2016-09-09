@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 namespace Burdette\Tests\Functional;
-
+require __DIR__ . '/../../vendor/autoload.php';
 
 use Burdette\BucketFactory;
 use Burdette\BucketRepository;
@@ -44,7 +44,7 @@ class TimeBlockStrategyTest extends \PHPUnit_Framework_TestCase
         $token = $strategy->getToken($identity);
         $this->assertEquals(false, $token->isAllowed());
 
-        sleep(2);
+        sleep(3);
         $token = $strategy->getToken($identity);
 
         $this->assertEquals(true, $token->isAllowed());

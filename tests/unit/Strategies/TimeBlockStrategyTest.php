@@ -59,15 +59,11 @@ class TimeBlockStrategyTest extends BaseStrategyTestCase
         $this->repo->shouldReceive('persist')->withAnyArgs();
         $strategy = new TimeBlockStrategy($this->repo);
         $strategy->setReplenishmentRate($replenish, 1);
-        $rClass = new \ReflectionClass($strategy);
-        $rProp = $rClass->getProperty('lastReplenishment');
-        $rProp->setAccessible(true);
-        $rProp->setValue($strategy, $lastReplenishment->getTimestamp());
         $bucket   = \Mockery::mock('Burdette\\BucketInterface');
         $bucket->shouldReceive('getTokens')->once()->withNoArgs()->andReturn($tokens);
         $bucket->shouldReceive('setTokens')->once()->with($replenish)->andReturnNull();
         $bucket->shouldReceive('getLastReplenishment')->withNoArgs()->andReturn($lastReplenishment->getTimestamp());
-        $bucket->shouldReceive('setLastReplenishment')->with(\Mockery::type('int'))->andReturnNull();
+        $bucket->shouldReceive('setLastReplenishment')->with(\Mockery::type(\DateTime::class))->andReturnNull();
         $strategy->replenishTokens($bucket);
     }
 
